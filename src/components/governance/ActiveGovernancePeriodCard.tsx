@@ -101,53 +101,6 @@ const ActiveGovernancePeriodCard: React.FC = () => {
       <Heading as="h2" size="lg" mb={2}>
         {governanceData.title}
       </Heading>
-      <Text fontSize="sm" color={useColorModeValue("gray.600", "gray.300")}>
-        Period ID: {governanceData.id}
-      </Text>
-
-      <Text mt={4}>{governanceData.slug}</Text>
-
-      {/* Description */}
-      <Text mt={4} fontStyle="italic">
-        {votingSession?.short_description}
-      </Text>
-
-      <Divider my={4} />
-
-      {/* Dates */}
-      <VStack align="start" spacing={2}>
-        <Text>
-          <strong>Start:</strong> {startDate}
-        </Text>
-        <Text>
-          <strong>End:</strong> {endDate}
-        </Text>
-        <Text>
-          <strong>Voting Start:</strong> {votingStart}
-        </Text>
-        <Text>
-          <strong>Voting End:</strong> {votingEnd}
-        </Text>
-      </VStack>
-
-      <Divider my={4} />
-
-      {/* Totals */}
-      <VStack align="start" spacing={2}>
-        <Text>
-          <strong>Total Committed Stake (ALGO):</strong>{" "}
-          {totalStake.toLocaleString(undefined, { maximumFractionDigits: 6 })}
-        </Text>
-        <Text>
-          <strong>Governor Count:</strong> {governanceData.governor_count}
-        </Text>
-        <Text>
-          <strong>Reward Pool (ALGO):</strong>{" "}
-          {rewardPool.toLocaleString(undefined, { maximumFractionDigits: 6 })}
-        </Text>
-      </VStack>
-
-      <Divider my={4} />
 
       {/* User Input */}
       <FormControl>
@@ -164,6 +117,28 @@ const ActiveGovernancePeriodCard: React.FC = () => {
 
       <Divider my={4} />
 
+      {/* User's stake in USD */}
+      <VStack align="start" spacing={2}>
+        <Text>
+          <strong>Your Stake (ALGO):</strong>{" "}
+          {userStake.toLocaleString(undefined, { maximumFractionDigits: 6 })}{" "}
+          <Text as="span" color="gray.500">
+            ({((userStake / totalStake) * 100).toFixed(4)}%)
+          </Text>
+        </Text>
+
+        <Text>
+          <strong>Your Stake (USD):</strong>{" "}
+          {userStakeUsd.toLocaleString(undefined, {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 2,
+          })}
+        </Text>
+      </VStack>
+
+      <Divider my={4} />
+
       {/* Rewards - 3 months */}
       <Stat>
         <StatLabel>3-Month Estimated Reward (ALGO)</StatLabel>
@@ -173,8 +148,8 @@ const ActiveGovernancePeriodCard: React.FC = () => {
           })}
         </StatNumber>
       </Stat>
-      <Text mt={2}>
-        3-Month Estimated Reward (USD):{" "}
+      <Text mt={2} color="gray.500">
+        3-Month Estimated Rewards (USD):{" "}
         {userReward3MoUsd.toLocaleString(undefined, {
           style: "currency",
           currency: "USD",
@@ -186,14 +161,14 @@ const ActiveGovernancePeriodCard: React.FC = () => {
 
       {/* Monthly rewards */}
       <Stat>
-        <StatLabel>Monthly Estimated Reward (ALGO)</StatLabel>
+        <StatLabel>Monthly Estimated ALGO Rewards</StatLabel>
         <StatNumber>
           {userRewardPerMonth.toLocaleString(undefined, {
             maximumFractionDigits: 6,
           })}
         </StatNumber>
       </Stat>
-      <Text mt={2}>
+      <Text mt={2} color="gray.500">
         Monthly Estimated Reward (USD):{" "}
         {userRewardPerMonthUsd.toLocaleString(undefined, {
           style: "currency",
@@ -212,20 +187,41 @@ const ActiveGovernancePeriodCard: React.FC = () => {
 
       <Divider my={4} />
 
-      {/* User's stake in USD */}
-      <VStack align="start" spacing={2}>
+      {/* Dates */}
+      <VStack align="start" spacing={1} fontSize="sm" color="gray.500">
+        {/* Totals */}
+        <VStack align="start" spacing={2}>
+          <Text>
+            <strong>Total Committed Stake (ALGO):</strong>{" "}
+            {totalStake.toLocaleString(undefined, { maximumFractionDigits: 6 })}
+          </Text>
+          <Text>
+            <strong>Governor Count:</strong> {governanceData.governor_count}
+          </Text>
+          <Text>
+            <strong>Reward Pool (ALGO):</strong>{" "}
+            {rewardPool.toLocaleString(undefined, { maximumFractionDigits: 6 })}
+          </Text>
+        </VStack>
+        <Divider my={1} />
         <Text>
-          <strong>Your Stake (ALGO):</strong>{" "}
-          {userStake.toLocaleString(undefined, { maximumFractionDigits: 6 })} (
-          {((userStake / totalStake) * 100).toFixed(4)}%)
+          <strong>Start:</strong> {startDate}
         </Text>
         <Text>
-          <strong>Your Stake (USD):</strong>{" "}
-          {userStakeUsd.toLocaleString(undefined, {
-            style: "currency",
-            currency: "USD",
-            maximumFractionDigits: 2,
-          })}
+          <strong>End:</strong> {endDate}
+        </Text>
+        <Text>
+          <strong>Voting Start:</strong> {votingStart}
+        </Text>
+        <Text>
+          <strong>Voting End:</strong> {votingEnd}
+        </Text>
+        {/* Description */}
+        <Text mt={4} fontStyle="italic">
+          {votingSession?.short_description}
+        </Text>
+        <Text fontSize="sm" color={useColorModeValue("gray.600", "gray.300")}>
+          Period ID: {governanceData.id}
         </Text>
       </VStack>
     </Box>
