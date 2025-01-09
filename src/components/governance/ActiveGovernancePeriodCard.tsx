@@ -216,7 +216,8 @@ const ActiveGovernancePeriodCard: React.FC = () => {
       <VStack align="start" spacing={2}>
         <Text>
           <strong>Your Stake (ALGO):</strong>{" "}
-          {userStake.toLocaleString(undefined, { maximumFractionDigits: 6 })}
+          {userStake.toLocaleString(undefined, { maximumFractionDigits: 6 })} (
+          {((userStake / totalStake) * 100).toFixed(4)}%)
         </Text>
         <Text>
           <strong>Your Stake (USD):</strong>{" "}

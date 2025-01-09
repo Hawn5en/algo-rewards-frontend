@@ -1,4 +1,4 @@
-import { Container, Heading, Text } from "@chakra-ui/react";
+import { Container, Heading } from "@chakra-ui/react";
 import ColorModeToggle from "../components/ColorModeToggle";
 import ActiveGovernanceComponent from "../components/governance/ActiveGovernancePeriodCard";
 
@@ -14,8 +14,7 @@ const MainPage = () => {
       // bg="gray.50"
       p={4}
     >
-      <Heading mb={4}>Algorand Themed App</Heading>
-      <Text mb={4}>Light or dark mode, all in one theme!</Text>
+      <Heading mb={4}>Algorand Rewards</Heading>
       <ActiveGovernanceComponent />
       <ColorModeToggle />
     </Container>

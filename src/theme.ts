@@ -62,8 +62,8 @@ const colors = {
 // 3. Define fonts (optional; adjust as needed)
 //
 const fonts = {
-  heading: `'Helvetica Neue', sans-serif`,
-  body: `'Helvetica Neue', sans-serif`,
+  heading: `'Inter', sans-serif`,
+  body: `'Inter', sans-serif`,
 };
 
 //
