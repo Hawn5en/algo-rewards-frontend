@@ -12,38 +12,78 @@ import {
   VStack,
   Divider,
   useColorModeValue,
+  Spinner,
 } from "@chakra-ui/react";
 import useActiveGovernancePeriod from "../../hooks/governance/useActiveGonvernancePeriod";
+import useAlgorandPrice from "../../hooks/governance/useAlgorandPrice";
+import { parseAlgoString } from "../../utils/parseAlgoString";
 
 const ActiveGovernancePeriodCard: React.FC = () => {
-  const { data, isLoading, error } = useActiveGovernancePeriod();
+  // 1. Fetch governance data
+  const {
+    data: governanceData,
+    isLoading,
+    error,
+  } = useActiveGovernancePeriod();
+
+  // 2. Fetch current ALGO price (USD)
+  const { data: priceData, isLoading: priceLoading } = useAlgorandPrice();
+
+  // 3. User input (already in normal ALGO format, e.g., "123.456789")
   const [committedAlgo, setCommittedAlgo] = useState<string>("0");
 
-  // Loading / Error states (optional)
-  if (isLoading) return <Text>Loading Active Governance Period...</Text>;
-  if (error) return <Text color="red.500">{error.message}</Text>;
-  if (!data) return null; // no data
+  // Loading / Error states
+  if (isLoading || priceLoading) {
+    return <Spinner />;
+  }
+  if (error) {
+    return <Text color="red.500">{error.message}</Text>;
+  }
+  if (!governanceData || !priceData) {
+    return <Text>No governance data or price data found</Text>;
+  }
 
-  // Parse numeric fields from response (they are strings according to your interface).
-  const totalStake = parseFloat(data.total_committed_stake) || 0;
-  const rewardPool = parseFloat(data.algo_amount_in_reward_pool) || 0;
+  // 4. Convert API strings to numeric ALGO
+  // Example: "517.992.783.522.431" => 517992783.522431 => numeric
+  const totalStake = parseAlgoString(governanceData.total_committed_stake);
+  const rewardPool = parseAlgoString(governanceData.algo_amount_in_reward_pool);
 
-  // Convert user input to a number
+  // 5. Parse user input as floating ALGO
   const userStake = parseFloat(committedAlgo) || 0;
 
-  // Calculate user’s share:
-  // ( userStake / totalStake ) * totalRewardPool
-  const userReward = totalStake > 0 ? (userStake / totalStake) * rewardPool : 0;
+  // 6. Calculate 3-month reward (the entire governance period)
+  //    Avoid dividing by zero.
+  const userReward3Mo =
+    totalStake > 0 ? (userStake / totalStake) * rewardPool : 0;
 
-  // Format some date/time strings for display
-  // In production, you'd likely use date-fns or dayjs to format these nicely
-  const startDate = new Date(data.start_datetime).toLocaleString();
-  const endDate = new Date(data.end_datetime).toLocaleString();
-  const votingStart = data.voting_sessions?.[0]?.voting_start_datetime
-    ? new Date(data.voting_sessions[0].voting_start_datetime).toLocaleString()
+  // 7. Monthly reward = 3-mo reward / 3
+  const userRewardPerMonth = userReward3Mo / 3;
+
+  // 8. APR calculation:
+  //    ( (3-mo yield) * 4 ) => annual, then * 100 => percentage
+  //    3-mo yield = userReward3Mo / userStake
+  let apr = 0;
+  if (userStake > 0) {
+    apr = (userReward3Mo / userStake) * 4 * 100;
+  }
+
+  // 9. Convert everything to USD using the fetched price
+  const algoPriceUsd = priceData.algorand.usd;
+  const userReward3MoUsd = userReward3Mo * algoPriceUsd;
+  const userRewardPerMonthUsd = userRewardPerMonth * algoPriceUsd;
+  const userStakeUsd = userStake * algoPriceUsd;
+
+  // 10. Format date/time
+  const startDate = new Date(governanceData.start_datetime).toLocaleString();
+  const endDate = new Date(governanceData.end_datetime).toLocaleString();
+
+  // Voting session info (if present)
+  const votingSession = governanceData.voting_sessions?.[0];
+  const votingStart = votingSession?.voting_start_datetime
+    ? new Date(votingSession.voting_start_datetime).toLocaleString()
     : "";
-  const votingEnd = data.voting_sessions?.[0]?.voting_end_datetime
-    ? new Date(data.voting_sessions[0].voting_end_datetime).toLocaleString()
+  const votingEnd = votingSession?.voting_end_datetime
+    ? new Date(votingSession.voting_end_datetime).toLocaleString()
     : "";
 
   return (
@@ -57,22 +97,24 @@ const ActiveGovernancePeriodCard: React.FC = () => {
       mx="auto"
       mt={8}
     >
-      {/* Title & Basic Info */}
+      {/* Basic Info */}
       <Heading as="h2" size="lg" mb={2}>
-        {data.title}
+        {governanceData.title}
       </Heading>
       <Text fontSize="sm" color={useColorModeValue("gray.600", "gray.300")}>
-        Period ID: {data.id}
+        Period ID: {governanceData.id}
       </Text>
-      <Text mt={4}>{data.slug}</Text>
 
-      {/* Short Description */}
+      <Text mt={4}>{governanceData.slug}</Text>
+
+      {/* Description */}
       <Text mt={4} fontStyle="italic">
-        {data.voting_sessions?.[0]?.short_description}
+        {votingSession?.short_description}
       </Text>
 
       <Divider my={4} />
 
+      {/* Dates */}
       <VStack align="start" spacing={2}>
         <Text>
           <strong>Start:</strong> {startDate}
@@ -94,35 +136,97 @@ const ActiveGovernancePeriodCard: React.FC = () => {
       <VStack align="start" spacing={2}>
         <Text>
           <strong>Total Committed Stake (ALGO):</strong>{" "}
-          {totalStake.toLocaleString()}
+          {totalStake.toLocaleString(undefined, { maximumFractionDigits: 6 })}
         </Text>
         <Text>
-          <strong>Governor Count:</strong> {data.governor_count}
+          <strong>Governor Count:</strong> {governanceData.governor_count}
         </Text>
         <Text>
-          <strong>Reward Pool (ALGO):</strong> {rewardPool.toLocaleString()}
+          <strong>Reward Pool (ALGO):</strong>{" "}
+          {rewardPool.toLocaleString(undefined, { maximumFractionDigits: 6 })}
         </Text>
       </VStack>
 
       <Divider my={4} />
 
-      {/* User Input: Committed ALGO */}
+      {/* User Input */}
       <FormControl>
-        <FormLabel>Enter your committed ALGO</FormLabel>
+        <FormLabel>Enter Your Committed ALGO</FormLabel>
         <Input
           type="number"
           placeholder="0"
+          step="0.000001"
           value={committedAlgo}
           onChange={(e) => setCommittedAlgo(e.target.value)}
           maxW="200px"
         />
       </FormControl>
 
-      {/* Calculated Reward */}
-      <Stat mt={4}>
-        <StatLabel>Your Estimated Reward (ALGO)</StatLabel>
-        <StatNumber>{userReward.toFixed(2)}</StatNumber>
+      <Divider my={4} />
+
+      {/* Rewards - 3 months */}
+      <Stat>
+        <StatLabel>3-Month Estimated Reward (ALGO)</StatLabel>
+        <StatNumber>
+          {userReward3Mo.toLocaleString(undefined, {
+            maximumFractionDigits: 6,
+          })}
+        </StatNumber>
       </Stat>
+      <Text mt={2}>
+        3-Month Estimated Reward (USD):{" "}
+        {userReward3MoUsd.toLocaleString(undefined, {
+          style: "currency",
+          currency: "USD",
+          maximumFractionDigits: 2,
+        })}
+      </Text>
+
+      <Divider my={4} />
+
+      {/* Monthly rewards */}
+      <Stat>
+        <StatLabel>Monthly Estimated Reward (ALGO)</StatLabel>
+        <StatNumber>
+          {userRewardPerMonth.toLocaleString(undefined, {
+            maximumFractionDigits: 6,
+          })}
+        </StatNumber>
+      </Stat>
+      <Text mt={2}>
+        Monthly Estimated Reward (USD):{" "}
+        {userRewardPerMonthUsd.toLocaleString(undefined, {
+          style: "currency",
+          currency: "USD",
+          maximumFractionDigits: 2,
+        })}
+      </Text>
+
+      <Divider my={4} />
+
+      {/* APR */}
+      <Stat>
+        <StatLabel>Annual Percentage Yield (APR)</StatLabel>
+        <StatNumber>{apr.toFixed(2)}%</StatNumber>
+      </Stat>
+
+      <Divider my={4} />
+
+      {/* User's stake in USD */}
+      <VStack align="start" spacing={2}>
+        <Text>
+          <strong>Your Stake (ALGO):</strong>{" "}
+          {userStake.toLocaleString(undefined, { maximumFractionDigits: 6 })}
+        </Text>
+        <Text>
+          <strong>Your Stake (USD):</strong>{" "}
+          {userStakeUsd.toLocaleString(undefined, {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 2,
+          })}
+        </Text>
+      </VStack>
     </Box>
   );
 };
