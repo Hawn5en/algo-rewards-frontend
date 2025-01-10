@@ -4,7 +4,6 @@ import NotFound from "./components/NotFound";
 
 const router = createBrowserRouter([
   {
-    index: true,
     path: "/algo-rewards-frontend",
     element: <MainPage />,
   },
