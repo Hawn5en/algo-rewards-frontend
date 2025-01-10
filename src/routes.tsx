@@ -4,7 +4,7 @@ import MainPage from "./pages/MainPage";
 const router = createBrowserRouter([
   {
     index: true,
-    path: "/algo-rewards-frontend",
+    path: "/",
     element: <MainPage />,
   },
 ]);
