@@ -91,14 +91,15 @@ const ActiveGovernancePeriodCard: React.FC = () => {
       borderWidth="1px"
       borderRadius="lg"
       p={6}
-      bg={useColorModeValue("white", "gray.800")}
+      bg={useColorModeValue("white", "#17cac6")}
       shadow="md"
-      maxW="600px"
+      maxW="700px"
       mx="auto"
       mt={8}
+      mb={2}
     >
       {/* Basic Info */}
-      <Heading as="h2" size="lg" mb={2}>
+      <Heading as="h2" size="lg" mb={2} textAlign="center">
         {governanceData.title}
       </Heading>
 
@@ -112,6 +113,7 @@ const ActiveGovernancePeriodCard: React.FC = () => {
           value={committedAlgo}
           onChange={(e) => setCommittedAlgo(e.target.value)}
           maxW="200px"
+          borderColor={useColorModeValue("gray.300", "gray.600")}
         />
       </FormControl>
 
@@ -122,7 +124,7 @@ const ActiveGovernancePeriodCard: React.FC = () => {
         <Text>
           <strong>Your Stake (ALGO):</strong>{" "}
           {userStake.toLocaleString(undefined, { maximumFractionDigits: 6 })}{" "}
-          <Text as="span" color="gray.500">
+          <Text as="span" color="gray.600">
             ({((userStake / totalStake) * 100).toFixed(4)}%)
           </Text>
         </Text>
@@ -148,7 +150,7 @@ const ActiveGovernancePeriodCard: React.FC = () => {
           })}
         </StatNumber>
       </Stat>
-      <Text mt={2} color="gray.500">
+      <Text mt={2} color="gray.600">
         3-Month Estimated Rewards (USD):{" "}
         {userReward3MoUsd.toLocaleString(undefined, {
           style: "currency",
@@ -168,7 +170,7 @@ const ActiveGovernancePeriodCard: React.FC = () => {
           })}
         </StatNumber>
       </Stat>
-      <Text mt={2} color="gray.500">
+      <Text mt={2} color="gray.600">
         Monthly Estimated Reward (USD):{" "}
         {userRewardPerMonthUsd.toLocaleString(undefined, {
           style: "currency",
@@ -188,7 +190,7 @@ const ActiveGovernancePeriodCard: React.FC = () => {
       <Divider my={4} />
 
       {/* Dates */}
-      <VStack align="start" spacing={1} fontSize="sm" color="gray.500">
+      <VStack align="start" spacing={1} fontSize="sm" color="gray.600">
         {/* Totals */}
         <VStack align="start" spacing={2}>
           <Text>
@@ -220,7 +222,7 @@ const ActiveGovernancePeriodCard: React.FC = () => {
         <Text mt={4} fontStyle="italic">
           {votingSession?.short_description}
         </Text>
-        <Text fontSize="sm" color={useColorModeValue("gray.600", "gray.300")}>
+        <Text fontSize="sm" color={useColorModeValue("gray.600", "gray.600")}>
           Period ID: {governanceData.id}
         </Text>
       </VStack>

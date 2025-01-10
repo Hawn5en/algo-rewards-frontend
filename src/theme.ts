@@ -33,16 +33,16 @@ const colors = {
   },
   // "brandDark" could be used for dark mode overrides
   brandDark: {
-    50: "#ffffff", // could be a near-white for text
-    100: "#e6e6e6",
-    200: "#cccccc",
-    300: "#b3b3b3",
-    400: "#999999",
-    500: "#7f7f7f",
-    600: "#666666",
-    700: "#4c4c4c",
-    800: "#333333",
-    900: "#000000", // true black
+    50: "#E0E8F0", // Very Light Blue Gray
+    100: "#B3C1D6", // Light Blue Gray
+    200: "#8092BB", // Soft Blue
+    300: "#4D63A1", // Medium Blue
+    400: "#1A3B86", // Dark Blue
+    500: "#001324", // Base Dark Blue
+    600: "#00101F", // Very Dark Blue
+    700: "#000D1A", // Extremely Dark Blue
+    800: "#000A15", // Near-Black Blue
+    900: "#00060F", // Blackish Blue
   },
   accent: {
     50: "#e4fbf9",
@@ -74,8 +74,8 @@ const fonts = {
 const styles = {
   global: (props: any) => ({
     "html, body": {
-      bg: mode("brand.50", "brandDark.900")(props), // light vs. dark background
-      color: mode("brand.500", "brandDark.50")(props), // light vs. dark text
+      bg: mode("brand.50", "brandDark.500")(props), // light vs. dark background
+      color: mode("brand.500", "brandDark.500")(props), // light vs. dark text
       margin: 0,
       padding: 0,
     },

@@ -74,7 +74,7 @@ const NodeRewardsCard: React.FC = () => {
       borderWidth="1px"
       borderRadius="lg"
       p={6}
-      bg={useColorModeValue("white", "gray.800")}
+      bg={useColorModeValue("white", "#17cac6")}
       shadow="md"
       maxW="700px"
       mx="auto"
@@ -82,7 +82,7 @@ const NodeRewardsCard: React.FC = () => {
       mb={2}
     >
       {/* Header */}
-      <Heading as="h2" size="lg" mb={4} textAlign="center">
+      <Heading as="h2" size="lg" mb={2} textAlign="center">
         Node
       </Heading>
 
@@ -98,110 +98,9 @@ const NodeRewardsCard: React.FC = () => {
             value={yourStake}
             onChange={(e) => setYourStake(e.target.value)}
             maxW="200px"
+            borderColor={useColorModeValue("gray.300", "gray.600")}
           />
         </FormControl>
-        <Divider my={1} />
-        <Show below="md">
-          {/* Block Time Input */}
-          <FormControl id="block-time" color="gray.500">
-            <FormLabel fontSize="sm">Block Time (seconds)</FormLabel>
-            <Input
-              fontSize="sm"
-              type="number"
-              placeholder="2.74"
-              step="0.01"
-              value={blockTimeSeconds}
-              onChange={(e) =>
-                setBlockTimeSeconds(parseFloat(e.target.value) || 0)
-              }
-              maxW="200px"
-            />
-          </FormControl>
-
-          {/* Online Eligible Stake Input */}
-          <FormControl id="online-eligible-stake" color="gray.500">
-            <FormLabel fontSize="sm">Online Eligible Stake</FormLabel>
-            <Input
-              fontSize="sm"
-              type="number"
-              placeholder="1,290,000"
-              step="1"
-              value={onlineEligibleStake}
-              onChange={(e) =>
-                setOnlineEligibleStake(parseFloat(e.target.value) || 0)
-              }
-              maxW="200px"
-            />
-          </FormControl>
-
-          {/* Reward Per Block Input */}
-          <FormControl id="reward-per-block" color="gray.500">
-            <FormLabel fontSize="sm">Reward Per Block</FormLabel>
-            <Input
-              fontSize="sm"
-              type="number"
-              placeholder="10"
-              step="0.1"
-              value={rewardPerBlock}
-              onChange={(e) =>
-                setRewardPerBlock(parseFloat(e.target.value) || 0)
-              }
-              maxW="200px"
-            />
-          </FormControl>
-        </Show>
-        <Hide below="md">
-          {" "}
-          <HStack spacing={2} w="100%">
-            {/* Block Time Input */}
-            <FormControl id="block-time" color="gray.500">
-              <FormLabel fontSize="sm">Block Time (seconds)</FormLabel>
-              <Input
-                fontSize="sm"
-                type="number"
-                placeholder="2.74"
-                step="0.01"
-                value={blockTimeSeconds}
-                onChange={(e) =>
-                  setBlockTimeSeconds(parseFloat(e.target.value) || 0)
-                }
-                maxW="200px"
-              />
-            </FormControl>
-
-            {/* Online Eligible Stake Input */}
-            <FormControl id="online-eligible-stake" color="gray.500">
-              <FormLabel fontSize="sm">Online Eligible Stake</FormLabel>
-              <Input
-                fontSize="sm"
-                type="number"
-                placeholder="1,290,000"
-                step="1"
-                value={onlineEligibleStake}
-                onChange={(e) =>
-                  setOnlineEligibleStake(parseFloat(e.target.value) || 0)
-                }
-                maxW="200px"
-              />
-            </FormControl>
-
-            {/* Reward Per Block Input */}
-            <FormControl id="reward-per-block" color="gray.500">
-              <FormLabel fontSize="sm">Reward Per Block</FormLabel>
-              <Input
-                fontSize="sm"
-                type="number"
-                placeholder="10"
-                step="0.1"
-                value={rewardPerBlock}
-                onChange={(e) =>
-                  setRewardPerBlock(parseFloat(e.target.value) || 0)
-                }
-                maxW="200px"
-              />
-            </FormControl>
-          </HStack>
-        </Hide>
       </VStack>
 
       <Divider my={6} />
@@ -228,7 +127,7 @@ const NodeRewardsCard: React.FC = () => {
             <Text>
               <strong>Daily Block Proposals:</strong>{" "}
               {dailyBlockProposalsRounded}{" "}
-              <Text as="span" color="gray.500">
+              <Text as="span" color="gray.600">
                 ({dailyBlockProposals.toFixed(2)})
               </Text>
             </Text>
@@ -240,12 +139,12 @@ const NodeRewardsCard: React.FC = () => {
               <StatLabel>Daily ALGO Rewards</StatLabel>
               <StatNumber>
                 {Math.floor(dailyAlgoRewards)}{" "}
-                <Text fontSize="md" as="span" color="gray.500">
+                <Text fontSize="md" as="span" color="gray.600">
                   ({dailyAlgoRewards.toFixed(4)})
                 </Text>
               </StatNumber>
             </Stat>
-            <Text color="gray.500">
+            <Text color="gray.600">
               Daily ALGO Rewards (USD):{" "}
               {dailyAlgoRewardsUsd.toLocaleString(undefined, {
                 style: "currency",
@@ -261,12 +160,12 @@ const NodeRewardsCard: React.FC = () => {
               <StatLabel>Monthly ALGO Rewards</StatLabel>
               <StatNumber>
                 {monthlyAlgoRewardsFloored}{" "}
-                <Text fontSize="md" as="span" color="gray.500">
+                <Text fontSize="md" as="span" color="gray.600">
                   ({monthlyAlgoRewards.toFixed(4)})
                 </Text>
               </StatNumber>
             </Stat>
-            <Text color="gray.500">
+            <Text color="gray.600">
               Monthly ALGO Rewards (USD):{" "}
               {monthlyAlgoRewardsUsd.toLocaleString(undefined, {
                 style: "currency",
@@ -285,6 +184,112 @@ const NodeRewardsCard: React.FC = () => {
           </Box>
         </VStack>
       )}
+      <Divider my={6} />
+      <Show below="md">
+        {/* Block Time Input */}
+        <FormControl id="block-time" color="gray.700">
+          <FormLabel fontSize="sm">Block Time (seconds)</FormLabel>
+          <Input
+            fontSize="sm"
+            type="number"
+            placeholder="2.74"
+            step="0.01"
+            value={blockTimeSeconds}
+            onChange={(e) =>
+              setBlockTimeSeconds(parseFloat(e.target.value) || 0)
+            }
+            maxW="200px"
+            borderColor={useColorModeValue("gray.300", "gray.600")}
+          />
+        </FormControl>
+
+        {/* Online Eligible Stake Input */}
+        <FormControl id="online-eligible-stake" color="gray.700">
+          <FormLabel fontSize="sm">Online Eligible Stake</FormLabel>
+          <Input
+            fontSize="sm"
+            type="number"
+            placeholder="1,290,000"
+            step="1"
+            value={onlineEligibleStake}
+            onChange={(e) =>
+              setOnlineEligibleStake(parseFloat(e.target.value) || 0)
+            }
+            maxW="200px"
+            borderColor={useColorModeValue("gray.300", "gray.600")}
+          />
+        </FormControl>
+
+        {/* Reward Per Block Input */}
+        <FormControl id="reward-per-block" color="gray.700">
+          <FormLabel fontSize="sm">Reward Per Block</FormLabel>
+          <Input
+            fontSize="sm"
+            type="number"
+            placeholder="10"
+            step="0.1"
+            value={rewardPerBlock}
+            onChange={(e) => setRewardPerBlock(parseFloat(e.target.value) || 0)}
+            maxW="200px"
+            borderColor={useColorModeValue("gray.300", "gray.600")}
+          />
+        </FormControl>
+      </Show>
+      <Hide below="md">
+        {" "}
+        <HStack spacing={2} w="100%">
+          {/* Block Time Input */}
+          <FormControl id="block-time" color="gray.700">
+            <FormLabel fontSize="sm">Block Time (seconds)</FormLabel>
+            <Input
+              fontSize="sm"
+              type="number"
+              placeholder="2.74"
+              step="0.01"
+              value={blockTimeSeconds}
+              onChange={(e) =>
+                setBlockTimeSeconds(parseFloat(e.target.value) || 0)
+              }
+              maxW="200px"
+              borderColor={useColorModeValue("gray.300", "gray.600")}
+            />
+          </FormControl>
+
+          {/* Online Eligible Stake Input */}
+          <FormControl id="online-eligible-stake" color="gray.700">
+            <FormLabel fontSize="sm">Online Eligible Stake</FormLabel>
+            <Input
+              fontSize="sm"
+              type="number"
+              placeholder="1,290,000"
+              step="1"
+              value={onlineEligibleStake}
+              onChange={(e) =>
+                setOnlineEligibleStake(parseFloat(e.target.value) || 0)
+              }
+              maxW="200px"
+              borderColor={useColorModeValue("gray.300", "gray.600")}
+            />
+          </FormControl>
+
+          {/* Reward Per Block Input */}
+          <FormControl id="reward-per-block" color="gray.700">
+            <FormLabel fontSize="sm">Reward Per Block</FormLabel>
+            <Input
+              fontSize="sm"
+              type="number"
+              placeholder="10"
+              step="0.1"
+              value={rewardPerBlock}
+              onChange={(e) =>
+                setRewardPerBlock(parseFloat(e.target.value) || 0)
+              }
+              maxW="200px"
+              borderColor={useColorModeValue("gray.300", "gray.600")}
+            />
+          </FormControl>
+        </HStack>
+      </Hide>
     </Box>
   );
 };

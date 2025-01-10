@@ -1,4 +1,11 @@
-import { Box, Grid, GridItem, Heading, HStack } from "@chakra-ui/react";
+import {
+  Box,
+  Grid,
+  GridItem,
+  Heading,
+  HStack,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import ColorModeToggle from "../components/ColorModeToggle";
 import ActiveGovernanceComponent from "../components/governance/ActiveGovernancePeriodCard";
 import NodeRewardsCard from "../components/node/NodeRewardsCard";
@@ -32,7 +39,13 @@ const MainPage = () => {
         mx="auto" // Center the grid horizontally
         mt={{ base: "16", md: "8" }} // Add top margin to avoid overlapping with the toggle
       >
-        <Heading as="h1" size="xl" textAlign="center" gridColumn="1 / -1">
+        <Heading
+          as="h1"
+          size="xl"
+          textAlign="center"
+          gridColumn="1 / -1"
+          color={useColorModeValue("gray.800", "white")}
+        >
           Algorand Rewards
         </Heading>
         {/* Active Governance Period Card */}
