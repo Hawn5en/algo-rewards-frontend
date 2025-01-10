@@ -1,8 +1,9 @@
 {
   "name": "algo-rewards-frontend",
-  "private": true,
+  "private": false,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://klsklnpitx.github.io/algo-rewards-frontend/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
