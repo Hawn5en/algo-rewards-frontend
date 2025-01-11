@@ -14,7 +14,6 @@ import {
   VStack,
   Divider,
   useColorModeValue,
-  Spinner,
   Flex,
   Icon,
   InputGroup,
@@ -29,15 +28,15 @@ const ActiveGovernancePeriodCard: React.FC = () => {
   // 1. Fetch governance data
   const {
     data: governanceData,
-    isLoading,
-    error,
+    // isLoading,
+    // error,
   } = useActiveGovernancePeriod();
 
   // 2. Fetch current ALGO price (USD)
   const {
     data: priceData,
-    isLoading: priceLoading,
-    error: priceError,
+    // isLoading: priceLoading,
+    // error: priceError,
   } = useAlgorandPrice();
 
   // 3. User input

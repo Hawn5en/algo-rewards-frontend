@@ -15,7 +15,6 @@ import {
   Divider,
   HStack,
   useColorModeValue,
-  Spinner,
   Show,
   Hide,
   Flex,
@@ -39,8 +38,8 @@ const NodeRewardsCard: React.FC = () => {
   // Fetch ALGO price in USD
   const {
     data: priceData,
-    isLoading: priceLoading,
-    error: priceError,
+    // isLoading: priceLoading,
+    // error: priceError,
   } = useAlgorandPrice();
 
   //   // Loading / Error states
