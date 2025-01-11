@@ -18,8 +18,13 @@ import {
   Spinner,
   Show,
   Hide,
+  Flex,
+  Icon,
+  InputGroup,
+  InputLeftElement,
 } from "@chakra-ui/react";
 import useAlgorandPrice from "../../hooks/governance/useAlgorandPrice";
+import { SiAlgorand } from "react-icons/si";
 
 const NodeRewardsCard: React.FC = () => {
   // Editable constants with initial default values
@@ -38,6 +43,14 @@ const NodeRewardsCard: React.FC = () => {
     error: priceError,
   } = useAlgorandPrice();
 
+  //   // Loading / Error states
+  //   if (priceLoading) {
+  //     return <Spinner />;
+  //   }
+  //   if (priceError) {
+  //     return <Text color="red.500">{priceError?.message}</Text>;
+  //   }
+
   // Parse user input
   const parsedYourStake = parseFloat(yourStake) || 0;
 
@@ -46,7 +59,9 @@ const NodeRewardsCard: React.FC = () => {
     onlineEligibleStake > 0 ? onlineEligibleStake : 1;
 
   // Calculations
+
   const yourProportion = parsedYourStake / validOnlineEligibleStake;
+  const yourStakeUsd = priceData ? parsedYourStake * priceData.algorand.usd : 0;
 
   const blocksPerDay = 86400 / blockTimeSeconds; // Total blocks per day
 
@@ -82,214 +97,299 @@ const NodeRewardsCard: React.FC = () => {
       mb={2}
     >
       {/* Header */}
-      <Heading as="h2" size="lg" mb={2} textAlign="center">
+      <Heading as="h2" size="lg" mb={4} textAlign="center">
         Node
       </Heading>
 
-      {/* Input Fields */}
+      {/* Input Section */}
       <VStack align="start" spacing={4}>
-        {/* User Stake Input */}
         <FormControl id="your-stake">
-          <FormLabel>Enter Your Stake (ALGO)</FormLabel>
-          <Input
-            type="number"
-            placeholder="0"
-            step="0.000001"
-            value={yourStake}
-            onChange={(e) => setYourStake(e.target.value)}
-            maxW="200px"
-            borderColor={useColorModeValue("gray.300", "gray.600")}
-          />
+          <FormLabel>Enter Your Staked ALGO</FormLabel>
+          <InputGroup>
+            <InputLeftElement>
+              <Icon
+                as={SiAlgorand}
+                w={4}
+                h={4}
+                // color={useColorModeValue("gray.500", "gray.300")}
+                aria-hidden="true"
+              />
+            </InputLeftElement>
+            <Input
+              type="number"
+              placeholder="0"
+              step="0.000001"
+              value={yourStake}
+              onChange={(e) => setYourStake(e.target.value)}
+              maxW="200px"
+              borderColor={useColorModeValue("gray.300", "gray.600")}
+            />
+          </InputGroup>
         </FormControl>
       </VStack>
 
-      <Divider my={6} />
+      <Divider my={2} />
 
-      {/* Calculations */}
-      {priceLoading ? (
-        <Spinner />
-      ) : priceError ? (
-        <Text color="red.500">
-          Error fetching ALGO price: {priceError.message}
-        </Text>
-      ) : (
-        <VStack align="start" spacing={2} w="100%">
+      {/* Stats/Calculations Section */}
+
+      <VStack align="start" spacing={1} w="100%">
+        <VStack align="start" spacing={1}>
+          {" "}
           {/* Your Proportion */}
-          <Box>
-            <Text>
-              <strong>Your Proportion:</strong>{" "}
-              {(yourProportion * 100).toFixed(4)}%
-            </Text>
-          </Box>
-
+          <Text>
+            <strong>Your Proportion:</strong>{" "}
+            {(yourProportion * 100).toFixed(4)}%{" "}
+          </Text>
+          <Text>
+            <strong>Your Stake:</strong>{" "}
+            {yourStakeUsd.toLocaleString(undefined, {
+              style: "currency",
+              currency: "USD",
+              maximumFractionDigits: 2,
+            })}
+          </Text>
           {/* Daily Block Proposals */}
-          <Box>
-            <Text>
-              <strong>Daily Block Proposals:</strong>{" "}
-              {dailyBlockProposalsRounded}{" "}
-              <Text as="span" color="gray.600">
-                ({dailyBlockProposals.toFixed(2)})
-              </Text>
+          <Text>
+            {" "}
+            <strong>Daily Block Proposals:</strong> {dailyBlockProposalsRounded}{" "}
+            <Text as="span" color="gray.600">
+              ({dailyBlockProposals.toFixed(2)})
             </Text>
-          </Box>
-          <Divider my={4} />
-          {/* Daily ALGO Rewards */}
-          <Box>
-            <Stat>
-              <StatLabel>Daily ALGO Rewards</StatLabel>
-              <StatNumber>
-                {Math.floor(dailyAlgoRewards)}{" "}
-                <Text fontSize="md" as="span" color="gray.600">
-                  ({dailyAlgoRewards.toFixed(4)})
-                </Text>
-              </StatNumber>
-            </Stat>
-            <Text color="gray.600">
-              Daily ALGO Rewards (USD):{" "}
-              {dailyAlgoRewardsUsd.toLocaleString(undefined, {
-                style: "currency",
-                currency: "USD",
-                maximumFractionDigits: 2,
-              })}
-            </Text>
-          </Box>
-          <Divider my={4} />
-          {/* Monthly ALGO Rewards */}
-          <Box>
-            <Stat>
-              <StatLabel>Monthly ALGO Rewards</StatLabel>
-              <StatNumber>
-                {monthlyAlgoRewardsFloored}{" "}
-                <Text fontSize="md" as="span" color="gray.600">
-                  ({monthlyAlgoRewards.toFixed(4)})
-                </Text>
-              </StatNumber>
-            </Stat>
-            <Text color="gray.600">
-              Monthly ALGO Rewards (USD):{" "}
-              {monthlyAlgoRewardsUsd.toLocaleString(undefined, {
-                style: "currency",
-                currency: "USD",
-                maximumFractionDigits: 2,
-              })}
-            </Text>
-          </Box>
-          <Divider my={4} />
-          {/* APR */}
-          <Box>
-            <Stat>
-              <StatLabel>Annual Percentage Yield (APR)</StatLabel>
-              <StatNumber>{apr.toFixed(2)}%</StatNumber>
-            </Stat>
-          </Box>
+          </Text>
         </VStack>
-      )}
-      <Divider my={6} />
-      <Show below="md">
-        {/* Block Time Input */}
-        <FormControl id="block-time" color="gray.700">
-          <FormLabel fontSize="sm">Block Time (seconds)</FormLabel>
-          <Input
-            fontSize="sm"
-            type="number"
-            placeholder="2.74"
-            step="0.01"
-            value={blockTimeSeconds}
-            onChange={(e) =>
-              setBlockTimeSeconds(parseFloat(e.target.value) || 0)
-            }
-            maxW="200px"
-            borderColor={useColorModeValue("gray.300", "gray.600")}
-          />
-        </FormControl>
 
-        {/* Online Eligible Stake Input */}
-        <FormControl id="online-eligible-stake" color="gray.700">
-          <FormLabel fontSize="sm">Online Eligible Stake</FormLabel>
-          <Input
-            fontSize="sm"
-            type="number"
-            placeholder="1,290,000"
-            step="1"
-            value={onlineEligibleStake}
-            onChange={(e) =>
-              setOnlineEligibleStake(parseFloat(e.target.value) || 0)
-            }
-            maxW="200px"
-            borderColor={useColorModeValue("gray.300", "gray.600")}
-          />
-        </FormControl>
+        <Divider my={2} />
 
-        {/* Reward Per Block Input */}
-        <FormControl id="reward-per-block" color="gray.700">
-          <FormLabel fontSize="sm">Reward Per Block</FormLabel>
-          <Input
-            fontSize="sm"
-            type="number"
-            placeholder="10"
-            step="0.1"
-            value={rewardPerBlock}
-            onChange={(e) => setRewardPerBlock(parseFloat(e.target.value) || 0)}
-            maxW="200px"
-            borderColor={useColorModeValue("gray.300", "gray.600")}
-          />
-        </FormControl>
-      </Show>
-      <Hide below="md">
-        {" "}
-        <HStack spacing={2} w="100%">
-          {/* Block Time Input */}
-          <FormControl id="block-time" color="gray.700">
-            <FormLabel fontSize="sm">Block Time (seconds)</FormLabel>
-            <Input
-              fontSize="sm"
-              type="number"
-              placeholder="2.74"
-              step="0.01"
-              value={blockTimeSeconds}
-              onChange={(e) =>
-                setBlockTimeSeconds(parseFloat(e.target.value) || 0)
-              }
-              maxW="200px"
-              borderColor={useColorModeValue("gray.300", "gray.600")}
-            />
-          </FormControl>
+        {/* Daily ALGO Rewards */}
+        <Stat>
+          <StatLabel>Daily Estimated Reward</StatLabel>
+          <StatNumber>
+            <Flex align={"center"}>
+              <Text mr={1}>
+                {Math.floor(dailyAlgoRewards)}{" "}
+                <Icon as={SiAlgorand} w={4} h={4} />{" "}
+                <Text fontSize="md" as="span" color="gray.600">
+                  ({dailyAlgoRewards.toFixed(4)}{" "}
+                  <Icon as={SiAlgorand} w={2.5} h={2.5} />)
+                </Text>
+              </Text>
+            </Flex>
+          </StatNumber>
+        </Stat>
+        <Text color="gray.600">
+          {dailyAlgoRewardsUsd.toLocaleString(undefined, {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 2,
+          })}
+        </Text>
 
-          {/* Online Eligible Stake Input */}
-          <FormControl id="online-eligible-stake" color="gray.700">
-            <FormLabel fontSize="sm">Online Eligible Stake</FormLabel>
-            <Input
-              fontSize="sm"
-              type="number"
-              placeholder="1,290,000"
-              step="1"
-              value={onlineEligibleStake}
-              onChange={(e) =>
-                setOnlineEligibleStake(parseFloat(e.target.value) || 0)
-              }
-              maxW="200px"
-              borderColor={useColorModeValue("gray.300", "gray.600")}
-            />
-          </FormControl>
+        <Divider my={2} />
 
-          {/* Reward Per Block Input */}
-          <FormControl id="reward-per-block" color="gray.700">
-            <FormLabel fontSize="sm">Reward Per Block</FormLabel>
-            <Input
-              fontSize="sm"
-              type="number"
-              placeholder="10"
-              step="0.1"
-              value={rewardPerBlock}
-              onChange={(e) =>
-                setRewardPerBlock(parseFloat(e.target.value) || 0)
-              }
-              maxW="200px"
-              borderColor={useColorModeValue("gray.300", "gray.600")}
-            />
-          </FormControl>
-        </HStack>
-      </Hide>
+        {/* Monthly ALGO Rewards */}
+        <Stat>
+          <StatLabel>Monthly Estimated Reward</StatLabel>
+          <StatNumber>
+            <Flex align={"center"}>
+              <Text mr={1}>
+                {monthlyAlgoRewardsFloored} <Icon as={SiAlgorand} w={4} h={4} />{" "}
+                <Text fontSize="md" as="span" color="gray.600">
+                  ({monthlyAlgoRewards.toFixed(4)}{" "}
+                  <Icon as={SiAlgorand} w={2.5} h={2.5} />)
+                </Text>
+              </Text>
+            </Flex>
+          </StatNumber>
+        </Stat>
+        <Text color="gray.600">
+          {monthlyAlgoRewardsUsd.toLocaleString(undefined, {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 2,
+          })}
+        </Text>
+
+        <Divider my={2} />
+
+        {/* APR */}
+        <Stat>
+          <StatLabel>Annual Percentage Return (APR)</StatLabel>
+          <StatNumber>{apr.toFixed(2)}%</StatNumber>
+        </Stat>
+      </VStack>
+
+      <Divider my={2} />
+
+      {/* Footer Section */}
+      <VStack align="start" spacing={6}>
+        {/* Responsive Inputs */}
+        <Show below="md">
+          <VStack align="start" spacing={4}>
+            {/* Block Time Input */}
+            <FormControl id="block-time" color="gray.700">
+              <FormLabel fontSize="sm">Block Time</FormLabel>
+              <InputGroup>
+                <InputLeftElement>
+                  <Text fontSize={13}>Sec</Text>
+                </InputLeftElement>
+                <Input
+                  fontSize="sm"
+                  type="number"
+                  placeholder="2.74"
+                  step="0.01"
+                  value={blockTimeSeconds}
+                  onChange={(e) =>
+                    setBlockTimeSeconds(parseFloat(e.target.value) || 0)
+                  }
+                  maxW="200px"
+                  borderColor={useColorModeValue("gray.300", "gray.600")}
+                />
+              </InputGroup>
+            </FormControl>
+
+            {/* Online Eligible Stake Input */}
+            <FormControl id="online-eligible-stake" color="gray.700">
+              <FormLabel fontSize="sm">Online Eligible Stake</FormLabel>
+              <InputGroup>
+                <InputLeftElement>
+                  <Icon
+                    as={SiAlgorand}
+                    w={3}
+                    h={3}
+                    color={"gray.600"}
+                    // color={useColorModeValue("gray.500", "gray.300")}
+                    aria-hidden="true"
+                  />
+                </InputLeftElement>
+                <Input
+                  fontSize="sm"
+                  type="number"
+                  placeholder="1,290,000"
+                  step="1"
+                  value={onlineEligibleStake}
+                  onChange={(e) =>
+                    setOnlineEligibleStake(parseFloat(e.target.value) || 0)
+                  }
+                  maxW="200px"
+                  borderColor={useColorModeValue("gray.300", "gray.600")}
+                />
+              </InputGroup>
+            </FormControl>
+
+            {/* Reward Per Block Input */}
+            <FormControl id="reward-per-block" color="gray.700">
+              <FormLabel fontSize="sm">Reward Per Block</FormLabel>
+              <InputGroup>
+                <InputLeftElement>
+                  <Icon
+                    as={SiAlgorand}
+                    w={3}
+                    h={3}
+                    color={"gray.600"}
+                    // color={useColorModeValue("gray.500", "gray.300")}
+                    aria-hidden="true"
+                  />
+                </InputLeftElement>
+                <Input
+                  fontSize="sm"
+                  type="number"
+                  placeholder="10"
+                  step="0.1"
+                  value={rewardPerBlock}
+                  onChange={(e) =>
+                    setRewardPerBlock(parseFloat(e.target.value) || 0)
+                  }
+                  maxW="200px"
+                  borderColor={useColorModeValue("gray.300", "gray.600")}
+                />
+              </InputGroup>
+            </FormControl>
+          </VStack>
+        </Show>
+        <Hide below="md">
+          <HStack spacing={2} w="100%">
+            {/* Block Time Input */}
+            <FormControl id="block-time" color="gray.700">
+              <FormLabel fontSize="sm">Block Time</FormLabel>
+              <InputGroup>
+                <InputLeftElement>
+                  <Text fontSize={13}>Sec</Text>
+                </InputLeftElement>
+                <Input
+                  fontSize="sm"
+                  type="number"
+                  placeholder="2.74"
+                  step="0.01"
+                  value={blockTimeSeconds}
+                  onChange={(e) =>
+                    setBlockTimeSeconds(parseFloat(e.target.value) || 0)
+                  }
+                  maxW="200px"
+                  borderColor={useColorModeValue("gray.300", "gray.600")}
+                />
+              </InputGroup>
+            </FormControl>
+
+            {/* Online Eligible Stake Input */}
+            <FormControl id="online-eligible-stake" color="gray.700">
+              <FormLabel fontSize="sm">Online Eligible Stake</FormLabel>
+              <InputGroup>
+                <InputLeftElement>
+                  <Icon
+                    as={SiAlgorand}
+                    w={3}
+                    h={3}
+                    color={"gray.600"}
+                    // color={useColorModeValue("gray.500", "gray.300")}
+                    aria-hidden="true"
+                  />
+                </InputLeftElement>
+                <Input
+                  fontSize="sm"
+                  type="number"
+                  placeholder="1,290,000"
+                  step="1"
+                  value={onlineEligibleStake}
+                  onChange={(e) =>
+                    setOnlineEligibleStake(parseFloat(e.target.value) || 0)
+                  }
+                  maxW="200px"
+                  borderColor={useColorModeValue("gray.300", "gray.600")}
+                />
+              </InputGroup>
+            </FormControl>
+
+            {/* Reward Per Block Input */}
+            <FormControl id="reward-per-block" color="gray.700">
+              <FormLabel fontSize="sm">Reward Per Block</FormLabel>
+              <InputGroup>
+                <InputLeftElement>
+                  <Icon
+                    as={SiAlgorand}
+                    w={3}
+                    h={3}
+                    color={"gray.600"}
+                    // color={useColorModeValue("gray.500", "gray.300")}
+                    aria-hidden="true"
+                  />
+                </InputLeftElement>
+                <Input
+                  fontSize="sm"
+                  type="number"
+                  placeholder="10"
+                  step="0.1"
+                  value={rewardPerBlock}
+                  onChange={(e) =>
+                    setRewardPerBlock(parseFloat(e.target.value) || 0)
+                  }
+                  maxW="200px"
+                  borderColor={useColorModeValue("gray.300", "gray.600")}
+                />
+              </InputGroup>
+            </FormControl>
+          </HStack>
+        </Hide>
+      </VStack>
     </Box>
   );
 };
