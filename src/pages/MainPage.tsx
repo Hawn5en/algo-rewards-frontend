@@ -32,7 +32,7 @@ const MainPage = () => {
 
       {/* Main Content Grid */}
       <Grid
-        templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} // 1 column on small screens, 2 on medium and up
+        templateColumns={{ sm: "1fr", lg: "1fr 1fr", xl: "repeat(3, 1fr)" }} // 1 column on small screens, 2 on medium, 3 on large
         gap={6}
         alignItems="start"
         justifyContent="center"
@@ -59,7 +59,7 @@ const MainPage = () => {
           <NodeRewardsCard />
         </GridItem>
 
-        {/* Node Calculated Rewards Card */}
+        {/* Proposed Blocks Rewards Card */}
         <GridItem>
           <ProposedBlocksRewardsCard />
         </GridItem>
