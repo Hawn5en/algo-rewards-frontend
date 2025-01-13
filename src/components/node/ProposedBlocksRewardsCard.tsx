@@ -84,11 +84,11 @@ const ProposedBlocksRewardsCard: React.FC = () => {
 
       <VStack align="start" spacing={4}>
         <FormControl>
-          <FormLabel>Enter Account Public Key</FormLabel>
+          <FormLabel>Enter Address</FormLabel>
 
           <Input
             type="text"
-            placeholder="Enter public key"
+            placeholder=""
             _placeholder={{ color: "black" }}
             value={publicKey}
             onChange={(e) => setPublicKey(e.target.value)}
