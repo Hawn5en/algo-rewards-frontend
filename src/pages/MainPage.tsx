@@ -10,6 +10,7 @@ import ColorModeToggle from "../components/ColorModeToggle";
 import ActiveGovernanceComponent from "../components/governance/ActiveGovernancePeriodCard";
 import NodeRewardsCard from "../components/node/NodeRewardsCard";
 import AlgoPriceDisplay from "../components/AlgoPriceDisplay";
+import ProposedBlocksRewardsCard from "../components/node/ProposedBlocksRewardsCard";
 
 const MainPage = () => {
   return (
@@ -31,11 +32,11 @@ const MainPage = () => {
 
       {/* Main Content Grid */}
       <Grid
-        templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} // 1 column on small screens, 2 on medium and up
+        templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} // 1 column on small screens, 2 on medium and up
         gap={6}
         alignItems="start"
         justifyContent="center"
-        maxW="1200px"
+        maxW="90%"
         mx="auto" // Center the grid horizontally
         mt={{ base: "16", md: "8" }} // Add top margin to avoid overlapping with the toggle
       >
@@ -56,6 +57,11 @@ const MainPage = () => {
         {/* Node Rewards Card */}
         <GridItem>
           <NodeRewardsCard />
+        </GridItem>
+
+        {/* Node Calculated Rewards Card */}
+        <GridItem>
+          <ProposedBlocksRewardsCard />
         </GridItem>
       </Grid>
     </Box>
