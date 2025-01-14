@@ -29,7 +29,7 @@ const NodeRewardsCard: React.FC = () => {
   // Editable constants with initial default values
   const [blockTimeSeconds, setBlockTimeSeconds] = useState<number>(2.74); // Block time in seconds
   const [onlineEligibleStake, setOnlineEligibleStake] =
-    useState<number>(1340000000); // Online eligible stake in ALGO
+    useState<number>(1370000000); // Online eligible stake in ALGO
   const [rewardPerBlock, setRewardPerBlock] = useState<number>(10); // Reward per block in ALGO
 
   // User input for their stake
